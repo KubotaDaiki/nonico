@@ -64,15 +64,17 @@ function createSvgElement() {
   return svgElement;
 }
 
+let thumbnail = document
+  .querySelectorAll(".VideoContainer-prePlayThumbnail")[0]
+  .style.backgroundImage.replace(/^url\(["']?/, "")
+  .replace(/["']?\)$/, "");
+
 // ページ情報を取得する関数
 function PageInfo() {
   let info = {};
   info["title"] = document.querySelector("title").textContent;
   info["url"] = location.href;
-  info["thumbnail"] = document
-    .querySelectorAll(".VideoContainer-prePlayThumbnail")[0]
-    .style.backgroundImage.replace(/^url\(["']?/, "")
-    .replace(/["']?\)$/, "");
+  info["thumbnail"] = thumbnail;
   let tagElements = document.querySelectorAll(".TagItem-name");
   let tags = [];
   for (const tagElement of tagElements) {
