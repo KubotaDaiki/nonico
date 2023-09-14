@@ -3,6 +3,9 @@
   "description": "niconicoの動画をnotionに保存",
   "version": "1.0",
   "manifest_version": 3,
+  "icons": {
+    "128": "icon.png"
+  },
   "host_permissions": [
     "https://api.notion.com/v1/pages",
     "https://www.nicovideo.jp/watch/*"
@@ -24,6 +27,7 @@
     }
   ],
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_icon": "icon.png"
   }
 }
