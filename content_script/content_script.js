@@ -85,10 +85,9 @@ function PageInfo() {
 // ページ情報をbackgroundへ送る関数
 function sendPageInformationToBackground() {
   let toolTip = document.querySelectorAll(".toolTip")[0];
-  toolTip.style.opacity = 1;
-
   chrome.runtime.sendMessage(PageInfo(), function (response) {
-    return true;
+    toolTip.textContent = response.message;
+    toolTip.style.opacity = 1;
   });
   setTimeout(function () {
     toolTip.style.opacity = 0;
