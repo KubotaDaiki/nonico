@@ -1,0 +1,29 @@
+{
+  "name": "nonico",
+  "description": "niconicoの動画をnotionに保存",
+  "version": "1.0",
+  "manifest_version": 3,
+  "host_permissions": [
+    "https://api.notion.com/v1/pages",
+    "https://www.nicovideo.jp/watch/*"
+  ],
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.nicovideo.jp/watch/*"],
+      "js": ["content_script/content_script.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content_script/style.css"],
+      "matches": ["https://www.nicovideo.jp/*"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  }
+}
