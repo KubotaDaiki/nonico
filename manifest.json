@@ -22,7 +22,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content_script/style.css"],
+      "resources": ["content_script/*"],
       "matches": ["https://www.nicovideo.jp/*"]
     }
   ],
