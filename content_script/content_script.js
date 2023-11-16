@@ -48,10 +48,16 @@ const pageInfo = {
   tags: tags,
 };
 
+let onBeforeunloadHandler = function (e) {
+  e.returnValue = "行った変更が保存されない可能性があります。";
+};
+
 // ページ情報をbackgroundへ送る関数
 function sendPageInfoToBackground() {
+  window.addEventListener("beforeunload", onBeforeunloadHandler);
   let toolTip = document.querySelector(".toolTip");
   chrome.runtime.sendMessage(pageInfo, function (response) {
+    window.removeEventListener("beforeunload", onBeforeunloadHandler);
     // レスポンス内容を表示する吹き出しを表示（フェードイン・フェードアウト）
     toolTip.textContent = response.message;
     toolTip.style.opacity = 1;
