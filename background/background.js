@@ -2,7 +2,6 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
   chrome.storage.local.get(
     ["notionToken", "databaseId"],
     async function (value) {
-      // 登録しようとした動画がすでに登録済みかチェック
       const response = await checkRegistered(value, info);
       if (response.status != 200) {
         sendResponse({ message: "エラーが発生しました" });
@@ -14,7 +13,6 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
         return;
       }
 
-      // 動画をNotionに登録
       const response2 = await registerWithNotion(value, info);
       if (response2.status == 200) {
         sendResponse({ message: "登録しました" });
@@ -26,6 +24,13 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
   return true;
 });
 
+/**
+ * 動画をNotionに登録する。
+ *
+ * @param {*} value Notionアクセス用の情報
+ * @param {*} info Notionに登録する情報
+ * @return {*} apiのレスポンス
+ */
 async function registerWithNotion(value, info) {
   const options = {
     method: "POST",
@@ -54,6 +59,13 @@ async function registerWithNotion(value, info) {
   );
 }
 
+/**
+ * 登録しようとした動画がすでに登録済みかチェック
+ *
+ * @param {*} value Notionアクセス用の情報
+ * @param {*} info 確認用のurl
+ * @return {*} apiのレスポンス
+ */
 async function checkRegistered(value, info) {
   const options = {
     method: "POST",

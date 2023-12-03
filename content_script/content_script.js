@@ -52,7 +52,10 @@ let onBeforeunloadHandler = function (e) {
   e.returnValue = "行った変更が保存されない可能性があります。";
 };
 
-// ページ情報をbackgroundへ送る関数
+/**
+ * ページ情報をbackgroundへ送る関数
+ *
+ */
 function sendPageInfoToBackground() {
   window.addEventListener("beforeunload", onBeforeunloadHandler);
   let toolTip = document.querySelector(".toolTip");
