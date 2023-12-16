@@ -40,10 +40,19 @@ let thumbnail = document
   .style.backgroundImage.replace(/^url\(["']?/, "")
   .replace(/["']?\)$/, "");
 
+/**
+ * クエリパラメータを除外する（マイリスト情報などを除外する）
+ * @param {string} url 除外前のURL
+ * @returns 除外後のURL
+ */
+function excludeQueryParameter(url) {
+  return url.replace(/\?.*$/, "");
+}
+
 // ページ情報を辞書に集約
 const pageInfo = {
   title: document.querySelector("title").textContent,
-  url: location.href,
+  url: excludeQueryParameter(location.href),
   thumbnail: thumbnail,
   tags: tags,
 };
