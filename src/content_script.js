@@ -13,7 +13,7 @@ window.onload = function () {
   parentnode.prepend(button);
 
   // svg要素を作成
-  let svgPath = chrome.runtime.getURL("content_script/notion.svg");
+  let svgPath = chrome.runtime.getURL("notion.svg");
   let svgElement = `<img src="${svgPath}" class="notion-img">`;
   button.insertAdjacentHTML("beforeend", svgElement);
 
@@ -23,7 +23,7 @@ window.onload = function () {
 };
 
 // ボタン用CSSの挿入
-let stylesheetPath = chrome.runtime.getURL("content_script/style.css");
+let stylesheetPath = chrome.runtime.getURL("style.css");
 let stylesheetElement = `<link rel="stylesheet" href="${stylesheetPath}" type="text/css">`;
 document.head.insertAdjacentHTML("beforeend", stylesheetElement);
 
