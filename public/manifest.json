@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.nicovideo.jp/watch/*"],
-      "js": ["js/content_script.js"]
+      "js": ["js/content_script.js", "js/vendor.js"]
     }
   ],
   "web_accessible_resources": [

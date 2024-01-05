@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
     ["notionToken", "databaseId"],
     async function (value) {
       const response = await checkRegistered(value, info);
-      if (response.status != 200) {
+      if (response?.status != 200) {
         sendResponse({ message: "エラーが発生しました" });
         return;
       }
@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
       }
 
       const response2 = await registerWithNotion(value, info);
-      if (response2.status == 200) {
+      if (response2?.status == 200) {
         sendResponse({ message: "登録しました" });
       } else {
         sendResponse({ message: "エラーが発生しました" });
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
  * @param {*} info Notionに登録する情報
  * @return {*} apiのレスポンス
  */
-async function registerWithNotion(value, info) {
+async function registerWithNotion(value: any, info: any) {
   const options = {
     method: "POST",
     headers: {
@@ -66,7 +66,7 @@ async function registerWithNotion(value, info) {
  * @param {*} info 確認用のurl
  * @return {*} apiのレスポンス
  */
-async function checkRegistered(value, info) {
+async function checkRegistered(value: any, info: any) {
   const options = {
     method: "POST",
     headers: {
