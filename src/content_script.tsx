@@ -40,14 +40,17 @@ function NotionButton() {
 
   function sendPageInfoToBackground() {
     window.addEventListener("beforeunload", onBeforeunloadHandler);
-    chrome.runtime.sendMessage(pageInfo, function (response) {
-      window.removeEventListener("beforeunload", onBeforeunloadHandler);
-      setToolTipText(response.message);
-      setOpen(true);
-      setTimeout(() => {
-        setOpen(false);
-      }, 2000);
-    });
+    chrome.runtime.sendMessage(
+      { type: "register", data: pageInfo },
+      function (response) {
+        window.removeEventListener("beforeunload", onBeforeunloadHandler);
+        setToolTipText(response.message);
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 2000);
+      }
+    );
   }
 
   return (

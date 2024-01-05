@@ -10,7 +10,7 @@
     "https://api.notion.com/v1/pages",
     "https://www.nicovideo.jp/watch/*"
   ],
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "background": {
     "service_worker": "js/background.js"
   },

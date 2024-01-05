@@ -1,26 +1,40 @@
 chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
-  chrome.storage.local.get(
-    ["notionToken", "databaseId"],
-    async function (value) {
-      const response = await checkRegistered(value, info);
-      if (response?.status != 200) {
-        sendResponse({ message: "エラーが発生しました" });
-        return;
-      }
-      const isRegistered = !((await response.json()).results.length === 0);
-      if (isRegistered) {
-        sendResponse({ message: "既に登録されています" });
-        return;
-      }
+  const { type, data } = info;
+  if (type === "register") {
+    chrome.storage.local.get(
+      ["access_token", "database_id"],
+      async function (value) {
+        const response = await checkRegistered(value, data);
+        if (response?.status != 200) {
+          sendResponse({ message: "エラーが発生しました" });
+          return;
+        }
+        const isRegistered = !((await response.json()).results.length === 0);
+        if (isRegistered) {
+          sendResponse({ message: "既に登録されています" });
+          return;
+        }
 
-      const response2 = await registerWithNotion(value, info);
-      if (response2?.status == 200) {
-        sendResponse({ message: "登録しました" });
-      } else {
-        sendResponse({ message: "エラーが発生しました" });
+        const response2 = await registerWithNotion(value, data);
+        if (response2?.status == 200) {
+          sendResponse({ message: "登録しました" });
+        } else {
+          sendResponse({ message: "エラーが発生しました" });
+        }
       }
-    }
-  );
+    );
+  } else if (type === "search") {
+    chrome.storage.local.get(["access_token"], async function (value) {
+      const response = await searchDatabase(value);
+
+      if (response?.status != 200) {
+        sendResponse({});
+        return;
+      }
+      const databaseList = (await response.json()).results;
+      sendResponse({ databaseList: databaseList });
+    });
+  }
   return true;
 });
 
@@ -38,12 +52,12 @@ async function registerWithNotion(value: any, info: any) {
       accept: "application/json",
       "content-type": "application/json",
       "Notion-Version": "2022-06-28",
-      Authorization: `Bearer ${value.notionToken}`,
+      Authorization: `Bearer ${value.access_token}`,
     },
     body: JSON.stringify({
       parent: {
         type: "database_id",
-        database_id: value.databaseId,
+        database_id: value.database_id,
       },
       properties: {
         title: { title: [{ text: { content: info["title"] } }] },
@@ -73,7 +87,7 @@ async function checkRegistered(value: any, info: any) {
       accept: "application/json",
       "content-type": "application/json",
       "Notion-Version": "2022-06-28",
-      Authorization: `Bearer ${value.notionToken}`,
+      Authorization: `Bearer ${value.access_token}`,
     },
     body: JSON.stringify({
       filter: {
@@ -85,7 +99,28 @@ async function checkRegistered(value: any, info: any) {
     }),
   };
   return await fetch(
-    `https://api.notion.com/v1/databases/${value.databaseId}/query`,
+    `https://api.notion.com/v1/databases/${value.database_id}/query`,
     options
   ).catch((err) => console.error(err));
+}
+
+async function searchDatabase(value: any) {
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      "Notion-Version": "2022-06-28",
+      Authorization: `Bearer ${value.access_token}`,
+    },
+    body: JSON.stringify({
+      filter: {
+        value: "database",
+        property: "object",
+      },
+    }),
+  };
+  return await fetch(`https://api.notion.com/v1/search`, options).catch((err) =>
+    console.error(err)
+  );
 }
