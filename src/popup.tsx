@@ -68,13 +68,14 @@ function DatabaseSelect() {
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        {databaseList.map((value: any) => {
-          return (
-            <MenuItem key={value.id} value={value.id}>
-              {value.title[0].text.content}
-            </MenuItem>
-          );
-        })}
+        {databaseList &&
+          databaseList.map((value: any) => {
+            return (
+              <MenuItem key={value.id} value={value.id}>
+                {value.title[0].text.content}
+              </MenuItem>
+            );
+          })}
       </Select>
     </FormControl>
   );
@@ -92,14 +93,13 @@ function createAuthPopup() {
 
   chrome.windows.create(authPopupParams, executeAuthFlow);
 }
-console.log(process.env.REACT_APP_clientId)
+
 function executeAuthFlow(window: any) {
   chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const isTransition =
       window.tabs[0].id == tabId &&
       "url" in changeInfo &&
-      changeInfo.url?.indexOf(process.env.redirectUri!) ===
-        0;
+      changeInfo.url?.indexOf(process.env.redirectUri!) === 0;
     if (isTransition) {
       const params = new URL(changeInfo.url!).searchParams;
       const code = params.get("code");
@@ -113,7 +113,9 @@ function executeAuthFlow(window: any) {
 }
 
 async function getUserData(code: any) {
-  const encoded = Buffer.from(`${process.env.clientId}:${process.env.clientSecret}`).toString("base64");
+  const encoded = Buffer.from(
+    `${process.env.clientId}:${process.env.clientSecret}`
+  ).toString("base64");
 
   const response = await fetch("https://api.notion.com/v1/oauth/token", {
     method: "POST",
